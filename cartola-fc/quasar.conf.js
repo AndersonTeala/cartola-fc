@@ -18,8 +18,8 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v1.quasar.dev/quasar-cli/boot-files
     boot: [
-      
       'axios',
+      'addressbar-color'
     ],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -71,14 +71,31 @@ module.exports = function (/* ctx */) {
     // Full list of options: https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
-      port: 8002,
-      open: true // opens browser window automatically
+      port: 8080,
+      open: true, // opens browser window automatically
+      proxy: {
+        // proxy all requests starting with /api to jsonplaceholder
+        '/cartola_jogadores': {
+          target: 'https://api.cartolafc.globo.com/atletas/mercado',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/cartola_jogadores': ''
+          }
+        },
+        '/cartola_clube': {
+          target: 'https://api.cartolafc.globo.com/clubes',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/cartola_clube': ''
+          }
+        }
+      }
     },
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       iconSet: 'material-icons', // Quasar icon set
-      lang: 'en-us', // Quasar language pack
+      lang: 'pt-br', // Quasar language pack
       config: {},
 
       // Possible values for "importStrategy":
@@ -94,7 +111,9 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'AddressbarColor'
+      ]
     },
 
     // animations: 'all', // --- includes all animations
@@ -117,30 +136,30 @@ module.exports = function (/* ctx */) {
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#027be3',
+        theme_color: '#f13601',
         icons: [
           {
-            src: 'icons/icon-128x128.png',
+            src: 'icons/cartola.png',
             sizes: '128x128',
             type: 'image/png'
           },
           {
-            src: 'icons/icon-192x192.png',
+            src: 'icons/cartola.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'icons/icon-256x256.png',
+            src: 'icons/cartola.png',
             sizes: '256x256',
             type: 'image/png'
           },
           {
-            src: 'icons/icon-384x384.png',
+            src: 'icons/cartola.png',
             sizes: '384x384',
             type: 'image/png'
           },
           {
-            src: 'icons/icon-512x512.png',
+            src: 'icons/cartola.png',
             sizes: '512x512',
             type: 'image/png'
           }

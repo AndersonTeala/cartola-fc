@@ -9,7 +9,6 @@
           </router-link>
         </q-toolbar-title>
 
-        <div>Cartola-FC v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
     <q-page-container>
