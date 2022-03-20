@@ -18,13 +18,23 @@
           :data="dadosJogadores"
           :columns="columns"
           row-key="name"
+          :filter="filter"
         >
+          <template v-slot:top-left>
+            <q-input
+              v-model="filter"
+              :clearable="true"
+              placeholder="Pesquisar"
+              size="xs"
+            />
+          </template>
           <template v-slot:top-right>
             <q-btn
               color="primary"
               icon-right="archive"
               label="Exportar csv"
               no-caps
+              size="sm"
               @click="exportTable"
             />
           </template>
@@ -70,51 +80,52 @@ export default {
   name: 'PageIndex',
   data() {
     return {
-         tab: 'jogadores',
-         jogadores: true,
-         clube: false,
-         dadosJogadores: [],
-         dadosClube: [],
-         columns: [
-          {
-            name: 'atleta_id',
-            required: true,
-            label: 'ID Jogador',
-            align: 'left',
-            field: row => row.atleta_id,
-            format: val => `${val}`,
-            sortable: true
-          },
-          { name: 'nome', align: 'left', label: 'Nome', field: 'nome', sortable: true },
-          { name: 'apelido', align: 'left', label: 'Apelido', field: 'apelido', sortable: true },
-          { name: 'apelido_abreviado', align: 'left', label: 'Apelido abreviado', field: 'apelido_abreviado', sortable: true },
-          { name: 'clube_id', align: 'left', label: 'Clube ID', field: 'clube_id', sortable: true },
-          { name: 'jogos_num', align: 'left', label: 'Jogos', field: 'jogos_num', sortable: true },
-          { name: 'media_num', align: 'left', label: 'Média', field: 'media_num', sortable: true },
-          { name: 'rodada_num', align: 'left', label: 'Rodada', field: 'rodada_num', sortable: true },
-          { name: 'slug', align: 'left', label: 'Slug', field: 'slug', sortable: true },
-          { name: 'status_id', align: 'left', label: 'Status ID', field: 'status_id', sortable: true },
-          { name: 'variacao_num', align: 'left', label: 'Variação', field: 'variacao_num', sortable: true },
-        ],
-         columnsClube: [
-          {
-            name: 'value',
-            required: true,
-            label: 'ID Clube',
-            align: 'left',
-            field: row => row.value,
-            format: val => `${val}`,
-            sortable: true
-          },
-          { name: 'nome', align: 'left', label: 'Nome', field: 'nome', sortable: true },
-          { name: 'nome_fantasia', align: 'left', label: 'Nome Fantasia', field: 'nome_fantasia', sortable: true },
-        ],
-        teste: []
+      filter: '',
+      tab: 'jogadores',
+      jogadores: true,
+      clube: false,
+      dadosJogadores: [],
+      dadosClube: [],
+      columns: [
+        {
+          name: 'atleta_id',
+          required: true,
+          label: 'ID Jogador',
+          align: 'left',
+          field: row => row.atleta_id,
+          format: val => `${val}`,
+          sortable: true
+        },
+        { name: 'nome', align: 'left', label: 'Nome', field: 'nome', sortable: true },
+        { name: 'apelido', align: 'left', label: 'Apelido', field: 'apelido', sortable: true },
+        { name: 'apelido_abreviado', align: 'left', label: 'Apelido abreviado', field: 'apelido_abreviado', sortable: true },
+        { name: 'clube_id', align: 'left', label: 'Clube ID', field: 'clube_id', sortable: true },
+        { name: 'jogos_num', align: 'left', label: 'Jogos', field: 'jogos_num', sortable: true },
+        { name: 'media_num', align: 'left', label: 'Média', field: 'media_num', sortable: true },
+        { name: 'rodada_num', align: 'left', label: 'Rodada', field: 'rodada_num', sortable: true },
+        { name: 'slug', align: 'left', label: 'Slug', field: 'slug', sortable: true },
+        { name: 'status_id', align: 'left', label: 'Status ID', field: 'status_id', sortable: true },
+        { name: 'variacao_num', align: 'left', label: 'Variação', field: 'variacao_num', sortable: true },
+      ],
+      columnsClube: [
+        {
+          name: 'value',
+          required: true,
+          label: 'ID Clube',
+          align: 'left',
+          field: row => row.value,
+          format: val => `${val}`,
+          sortable: true
+        },
+        { name: 'nome', align: 'left', label: 'Nome', field: 'nome', sortable: true },
+        { name: 'nome_fantasia', align: 'left', label: 'Nome Fantasia', field: 'nome_fantasia', sortable: true },
+      ],
+      teste: []
     }
   },
   mounted(){
     this.getJogadores()
-    this.getClube()
+    // this.getClube()
   },
   methods: {
     exportTable () {
@@ -142,20 +153,22 @@ export default {
       }
     },
     getJogadores(){
-      let that = this
-      that.$axios.get('/cartola_jogadores')
+      const that = this
+      // that.$axios.get('/cartola_jogadores')
+      that.$axios.get(`https://cors-anywhere.herokuapp.com/api.cartolafc.globo.com/atletas/mercado`)
       .then((response) => {
-        this.dadosJogadores = response.data.atletas
-        // console.log(this.dadosJogadores)
+        that.dadosJogadores = response.data.atletas
+        that.dadosClube = response.data.clubes
       }).catch((error) => {
         console.log(error)
       })
     },
     getClube(){
       let that = this
-      that.$axios.get('/cartola_jogadores')
+      // that.$axios.get('/cartola_jogadores')
+      that.$axios.get(`https://cors-anywhere.herokuapp.com/api.cartolafc.globo.com/clubes`)
       .then((response) => {
-        that.dadosClube = response.data.clubes
+        that.dadosClube = response.data
         // console.log(that.dadosClube)
         // var map = new Map(Object.entries(that.dadosClube));
         // console.log(map)
